@@ -45,6 +45,7 @@ We will evaluate the system on our own test sets, by querying your system for ea
 * You can program in your prefered language, but we suggest you code in **Python**, since it is our primary language at unbabel
 * Make sure you ***document everything*** and assume nothing.
 * Don't forget to keep your code clean and commit regularly.
+* Please avoid using existing language identification libraries for the final solution.
 * ***Send us a link to your fork*** as soon as you start working on it, and then let us know when you're done. Be sure to set our role as `reporter` and not `guest`.
 * If you can't finish the challenge due to unforeseen personal reasons let us know ASAP so we can adapt your deadline and/or challenge.
 * Any challenge related questions, technical or otherwise, feel free to contact us: `ai-challenge@unbabel.com`.
