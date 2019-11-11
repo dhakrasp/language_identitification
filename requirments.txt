@@ -1,0 +1,4 @@
+keras
+tensorflow-gpu==1.15.0
+sklearn
+numpy==1.17.3
