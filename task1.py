@@ -1,7 +1,7 @@
 import os
 import pickle
 from argparse import ArgumentParser
-from collections import defaultdict, Counter
+from collections import Counter
 from pathlib import Path
 from string import punctuation
 
@@ -40,66 +40,118 @@ def get_raw_data(data_dir):
 
 
 def get_raw_texts(fpath):
-    """[summary]
-    
+    """Fetches the raw texts for testing
+
     Arguments:
-        fpath {[type]} -- [description]
-    
+        fpath {str} -- Path to the test data file
+
     Returns:
-        [type] -- [description]
+        list -- List of strings. List of all the test samples
     """
     with open(fpath, 'r', encoding='utf-8') as file:
         return list(map(lambda x: x.lower().strip(), file.readlines()))
 
 
 def text_to_ids(text, vocab):
+    """Converts a text to a sequence of word ids
+
+    Arguments:
+        text {str} -- A data sample
+        vocab {dict} -- A dict holding the word: idx mapping
+
+    Returns:
+        [list] -- List of integer ids
+    """
     return [vocab[c] if c in vocab else 0 for c in text]
 
 
 def get_vectorized_data(data_dict, vocab, label2id):
+    """Converts text data and labels into tensors of integers
+
+    Arguments:
+        data_dict {dict} -- Dictionary with each language representing a key. The values are the corresponding (list of) training samples.
+        vocab {dict} -- A dict holding the word: idx mapping
+        label2id {dict} -- A dict holding the language: idx mapping
+
+    Returns:
+        np.array -- Rank 2 tensor holding all the vectorized training samples
+        np.array -- Rank 1 tensor holding all the vectorized training labels
+    """
     Y = []
     sequences = []
     for lang, data in data_dict.items():
         for text in data:
             sequences.append(text_to_ids(text, vocab))
             Y.append(label2id[lang])
-    lengths = np.array([len(seq) for seq in sequences])
     X = pad_sequences(sequences, maxlen=200, dtype='int32', padding='post', truncating='post', value=0)
     Y = np.array(Y)
     return X, Y
 
 
 def get_vectorized_texts(texts, vocab):
-    sequences = []
-    for text in texts:
-        sequences.append(text_to_ids(text, vocab))
+    """Converts text data into tensors of integers
+
+    Arguments:
+        texts {list} -- List of all the test samples. A list of strings
+        vocab {dict} -- A dict holding the word: idx mapping
+
+    Returns:
+        np.array -- Rank 2 tensor holding all the vectorized samples
+    """
+    sequences = [text_to_ids(text, vocab) for text in texts]
     X = pad_sequences(sequences, maxlen=200, dtype='int32', padding='post', truncating='post', value=0)
     return X
 
 
 def make_model(input_dim, embed_dim, hidden_dim, output_dim):
-    dropout_prob = 0.
-    model = Sequential()
-    model.add(Embedding(input_dim, embed_dim, embeddings_initializer='uniform'))
+    """Creates a BiLSTM based model
 
+    Arguments:
+        input_dim {int} -- Size of the input vocabulary + 1 (adjusted for 0) i.e number of unqique characters
+        embed_dim {int} -- Size of character embeddings
+        hidden_dim {int} -- Size of LSTM hidden state
+        output_dim {int} -- Number of output classes
+
+    Returns:
+        keras.models.Sequntial -- Instance of a Keras Sequential model
+    """
+    dropout_prob = 0.
     r1, r2 = None, None
     # r1=regularizers.l2(0.001)
     # r2=regularizers.l2(0.001)
 
+    model = Sequential()
+    # Add character embeddings
+    model.add(Embedding(input_dim, embed_dim, embeddings_initializer='uniform'))
     model.add(Bidirectional(LSTM(units=hidden_dim, kernel_regularizer=r1), merge_mode='concat'))
     model.add(Dropout(dropout_prob))
     model.add(Dense(output_dim, activation='softmax', kernel_regularizer=r2))
     model.add(Dropout(dropout_prob))
+
+    # print model's layerwise summary
     print(model.summary())
     return model
 
 
 def save_pickle(obj, fpath):
+    """Saves an object in pickle format at the given file path
+
+    Arguments:
+        obj {object} -- An instance of any pickable object
+    """
     with open(fpath, 'wb') as file:
         pickle.dump(obj, file)
 
 
 def load_pickle(fpath):
+    """Saves an object in pickle format from the given file path
+
+    Arguments:
+        fpath {str} -- Path of the file where the pickle is stored
+
+    Returns:
+        object -- Object stored in the pickle file
+    """
     with open(fpath, 'rb') as file:
         return pickle.load(file)
 
@@ -177,8 +229,10 @@ if __name__ == "__main__":
         # create model
         model = make_model(input_dim, embed_dim, hidden_dim, output_dim)
 
-        # compile model
+        # use Adam optimizer
         optim = Adam(lr=5e-4, clipnorm=5., clipvalue=1.)
+
+        # compile model
         model.compile(loss='sparse_categorical_crossentropy', metrics=['sparse_categorical_accuracy'], optimizer=optim)
 
         # callbacks for saving and early stopping
