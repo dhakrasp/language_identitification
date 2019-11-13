@@ -14,7 +14,7 @@ Steps to setup:
 
 + Create a virutal environment `make venv`
 
-+ Switch to virtual environment `make active`
++ Switch to virtual environment `source venv/bin/activate`
 
 + Install requirements `make dep`
 

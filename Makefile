@@ -1,8 +1,5 @@
 venv:
-	virtualenv -p python3 venv
+	virtualenv -p python3.6 venv
 
 dep:
 	pip install -r requirements.txt
-
-activate:
-	source venv/bin/activate
