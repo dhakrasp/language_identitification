@@ -126,7 +126,6 @@ def make_model(input_dim, embed_dim, hidden_dim, output_dim):
     model.add(Bidirectional(LSTM(units=hidden_dim, kernel_regularizer=r1), merge_mode='concat'))
     model.add(Dropout(dropout_prob))
     model.add(Dense(output_dim, activation='softmax', kernel_regularizer=r2))
-    model.add(Dropout(dropout_prob))
 
     # print model's layerwise summary
     print(model.summary())
