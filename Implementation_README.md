@@ -4,7 +4,7 @@ This document describes the setup, work done, how to run the code and where to f
 
 ## Setup
 
-Make sure you have the follow:
+Make sure you have the following:
 
 + Python 3.6
 + virtualenv
@@ -18,6 +18,8 @@ Steps to setup:
 
 + Install requirements `make dep`
 
+All models are coded in Keras with Tensorflow backend.
+
 ## Task 1: Language Identification
 
 Implement a Language Identification service that returns the language code of the language in which the text is written.
@@ -25,6 +27,15 @@ Implement a Language Identification service that returns the language code of th
 ### Model
 
 ![Task 1 Model](model_images/task1.png)
+
+This model is a char-level model, meaning its input is a sequence of characters rather than words.
+
+
+The number of input characters is limited to 256 since that covers most character variations occuring in English, Spanish and Portugese.
+In order to keep the training time short all sentences are trimmed (and padded if necessary) to a maximum length of 200 characters.
+The mean and median lengths of sentences in characters is ~130, ~105 respectively.
+
+The model has a char-level embedding layer and a single layer BiLSTM followed by a FC Layer. The weights for all 3 layers are initialized randomly and learnt during the training.
 
 ### How to run
 
@@ -57,7 +68,16 @@ This script needs two arguments arg1 and arg2 both being numbers.
 ## Task 2: Language Variants Identification
 
 ### Model
+
 ![Task 2 Model](model_images/task2.png)
+
+This model is a char-level model, meaning its input is a sequence of characters rather than words.
+
+The number of input characters is limited to 96 since that covers most character variations occuring in both variants of Portugese. 
+In order to keep the training time short all sentences are trimmed (and padded if necessary) to a maximum length of 200 characters.
+The mean and median lengths of sentences in characters is ~115, ~100 respectively.
+
+The model has a char-level embedding layer and a single layer BiLSTM followed by a FC Layer. The weights for all 3 layers are initialized randomly and learnt during the training.
 
 ### How to run
 
@@ -92,6 +112,18 @@ This script needs two arguments arg1 and arg2 both being numbers.
 ### Model
 
 ![Task 3 Model](model_images/task3.png)
+
+This model is a char-level model, meaning its input is a sequence of characters rather than words.
+
+The number of input characters is limited to 257 (including the special 'unk' character ) since that covers many common characters in English and Spanish. The idea is to let the 'unk' character handle the numerous Unicode characters that may appear. Since our task is to only distinguish between other/en/es and not really understand the meaning of individual Unicode characters. By limiting the number of characters, we can limit the model size while not giving up on performance.
+
+In order to keep the training time short all tokens are trimmed to a maximum length of 50 characters and all tweets are trimmed to a maximum length of 60 tokens. Padding is applied at both word and character levels as necessary.
+The max length of any token appearing in training data in characters is ~50.
+The max length of any tweet appearing in training data in tokens is ~50.
+
+This model has a 2 levels of BiLSTM, one processing the characters in every word and generating hidden word representations while the other works on the hidden word representations and learns to distinguish them. These layers are followed by a FC layer to project onto the output vector space. The weights for all the layers are initialized randomly and learnt during the training.
+
+Additionally, we make use of masking technique to hide the padding added at the end of input sequence (from weight learning and loss computation process). The masks are applied to the character embeddings and to the hidden word representations.
 
 ### How to run
 
