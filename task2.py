@@ -198,13 +198,19 @@ if __name__ == "__main__":
         for lang, data in data_dict.items():
             for line in data:
                 char_counter.update(line)
+        
+        # trim the vocab
         for k, _ in char_counter.most_common(256):
             vocab[k] = len(vocab) + 1
+
+        # save the vocab to pickle
         save_pickle(vocab, vocab_file)
         print(f'Vocab size: {len(vocab)}')
 
         # create a language to idx map
         label2id = {k: idx for idx, k in enumerate(data_dict.keys())}
+        
+        # save the lables to pickle
         save_pickle(label2id, labels_file)
         print(f'Labels:\n{label2id}')
 
