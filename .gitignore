@@ -96,9 +96,10 @@ ENV/
 
 .idea/
 
-# Data
-langid-data/
-langid-data-small/
+# Models
+langid-data/*
+*.pkl
+*.model
 
 # VS Code settings
 .vscode/

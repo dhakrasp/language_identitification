@@ -253,8 +253,8 @@ if __name__ == "__main__":
 
         # load vocab, labels and model
         vocab = load_pickle(vocab_file)
-        print(len(vocab))
         label2id = load_pickle(labels_file)
+        id2label = {v: k for k, v in label2id.items()}
         model = load_model(model_file)
 
         # vectorize the dev data
@@ -262,8 +262,9 @@ if __name__ == "__main__":
 
         # predict the languages
         y_pred = np.argmax(model.predict(X, batch_size=512), axis=-1)
+        y_pred = list(map(lambda x: id2label[x], y_pred))
+        Y = list(map(lambda x: id2label[x], Y))
 
-        print(label2id)
         # print metrics
         print(classification_report(Y, y_pred))
         print(confusion_matrix(Y, y_pred))
