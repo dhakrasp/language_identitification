@@ -145,6 +145,6 @@ Additionally, we make use of masking technique to hide the padding added at the 
 
 ### Results
 
-These are the results on the dev data [here](code_switching/data/data.tsv)
+These are the results on the dev data [here](code_switching/data/dev_data.tsv)
 
 ![Task 3 result on dev data](results/task3.png)
