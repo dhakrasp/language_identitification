@@ -63,6 +63,8 @@ This script needs two arguments arg1 and arg2 both being numbers.
 
 ### Results
 
+These are the results on the dev data [here](langid-data-small/task1/test)
+
 ![Task 1 result on dev data](results/task1.png)
 
 ## Task 2: Language Variants Identification
@@ -105,6 +107,8 @@ This script needs two arguments arg1 and arg2 both being numbers.
 
 ### Results
 
+These are the results on the dev data [here](langid-data-small/task2/test)
+
 ![Task 2 result on dev data](results/task2.png)
 
 ## Task 3: Code Switching Detection
@@ -140,5 +144,7 @@ Additionally, we make use of masking technique to hide the padding added at the 
 `python task3.py --mode predict`
 
 ### Results
+
+These are the results on the dev data [here](code_switching/data/dev_data.tsv)
 
 ![Task 3 result on dev data](results/task3.png)
