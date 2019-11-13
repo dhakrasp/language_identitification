@@ -29,7 +29,10 @@ Implement a Language Identification service that returns the language code of th
 ### How to run
 
 + Create subset of dataset
-`sh task_1_create_small_dataset.sh`
+This script needs two arguments arg1 and arg2 both being numbers.
+**arg1**: number of traininig samples to pick for each class.
+**arg2**: number of dev samples to pick for each class.
+`sh task_1_create_small_dataset.sh 10000 10000`
 
 + Train
 `python task1.py --mode train`
@@ -50,7 +53,10 @@ Implement a Language Identification service that returns the language code of th
 ### How to run
 
 + Create subset of dataset
-`sh task_2_create_small_dataset.sh`
+This script needs two arguments arg1 and arg2 both being numbers.
+**arg1**: number of traininig samples to pick for each class.
+**arg2**: number of dev samples to pick for each class.
+`sh task_2_create_small_dataset.sh  10000 10000`
 
 + Train
 `python task2.py --mode train`
@@ -69,9 +75,6 @@ Implement a Language Identification service that returns the language code of th
 ![Task 3 Model](model_images/task3.png)
 
 ### How to run
-
- Create subset of dataset
-`sh task_3_create_small_dataset.sh`
 
 + Train
 `python task3.py --mode train`
